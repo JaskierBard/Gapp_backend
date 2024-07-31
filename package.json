@@ -1,7 +1,15 @@
 {
+  "name": "gapp-backend",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
+    "express-async-errors": "^3.1.1",
     "firebase": "^10.12.4"
   },
   "devDependencies": {
