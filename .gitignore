@@ -145,3 +145,5 @@ dist
 
 aiConfig.ts
 firebaseConfig.ts
+items.ts
+test.ts

@@ -64,9 +64,7 @@ export class PlayerRecords implements PlayerEntity {
     await setDoc(doc(collection(FIRESTORE_DB, "hero"), player_id), {
       destination: {},
       missions: {},
-      equipment: {
-
-      },
+      equipment: {},
       parameters: {
         healthPoints: 55,
         manaPoints: 10,
@@ -81,7 +79,7 @@ export class PlayerRecords implements PlayerEntity {
   static async getStatistics(player_id: string) {
     const heroRef = doc(FIRESTORE_DB, `hero/${player_id}`);
     const heroDoc = await getDoc(heroRef);
-    const currentData:any = heroDoc.data() || [];
+    const currentData: any = heroDoc.data() || [];
     return currentData;
-  };
+  }
 }
