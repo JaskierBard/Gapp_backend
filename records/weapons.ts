@@ -31,9 +31,9 @@ export class WeaponRecords implements WeaponEntity {
   }
 
   static async getEqItems(itemsRequest: any) {
-    const items: WeaponEntity[] = [];
+    const items: any = [];
 
-    const images = await getImages("weapons");
+    const images = await getImages("items");
 
     for (const category in itemsRequest) {
       const categoryItems = itemsRequest[category];
@@ -44,8 +44,8 @@ export class WeaponRecords implements WeaponEntity {
               collection(FIRESTORE_DB, "items"),
               category
             );
-            const docSnapshot = await getDoc(conversationRef);
-            const item: WeaponEntity = docSnapshot.get(itemId);
+            const docSnapshot = await getDoc(conversationRef); // to jako funkcja get items
+            const item = docSnapshot.get(itemId);
 
             const selectedData = Object.entries(images)
               .filter(([key]) => key.includes(itemId))
