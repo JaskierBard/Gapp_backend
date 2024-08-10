@@ -1,7 +1,7 @@
 import { WeaponEntity } from "../types/weapon";
 import { collection, doc, getDoc } from "firebase/firestore";
 import { FIRESTORE_DB } from "../utils/firebase/firebaseConfig";
-import { getImages } from "../utils/services/getImages";
+import { getImage } from "../utils/services/getImage";
 
 export class WeaponRecords implements WeaponEntity {
   id: number;
@@ -33,8 +33,6 @@ export class WeaponRecords implements WeaponEntity {
   static async getEqItems(itemsRequest: any) {
     const items: any = [];
 
-    const images = await getImages("items");
-
     for (const category in itemsRequest) {
       const categoryItems = itemsRequest[category];
       const itemPromises = Object.entries(categoryItems).map(
@@ -44,15 +42,13 @@ export class WeaponRecords implements WeaponEntity {
               collection(FIRESTORE_DB, "items"),
               category
             );
-            const docSnapshot = await getDoc(conversationRef); // to jako funkcja get items
+            const docSnapshot = await getDoc(conversationRef);
             const item = docSnapshot.get(itemId);
 
-            const selectedData = Object.entries(images)
-              .filter(([key]) => key.includes(itemId))
-              .map(([key, value]) => ({
-                id: parseInt(key.slice(0, 3), 10),
-                image: value,
-              }))[0];
+            const selectedData = {
+              id: parseInt(itemId, 10),
+              image: await getImage(itemId),
+            };
 
             const updatedItem = {
               ...item,
@@ -73,6 +69,7 @@ export class WeaponRecords implements WeaponEntity {
 
       await Promise.all(itemPromises);
     }
+    // console.log(items)
     return items;
   }
 }
