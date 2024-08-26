@@ -75,14 +75,28 @@ export class PlayerRecords implements PlayerEntity {
       },
     });
   }
-
-  static async addItem(player_id: string, category: string, item: object) {
+  static async addItems(player_id: string, category: string, item: object) {
     const heroRef = doc(FIRESTORE_DB, `hero/${player_id}`);
+    // const heroRef = doc(FIRESTORE_DB, `npc/Bosper`);
+
     const heroDoc = await getDoc(heroRef);
     const currentData: any = heroDoc.data() || [];
     const equipment = currentData.equipment || {};
-    // equipment['bow'] = { '601': 2 };
-    equipment[category] = item;
+    equipment[category] = item; // dodaje wiele
+    await updateDoc(heroRef, {
+      equipment,
+    });
+
+    return equipment;
+  }
+  static async addItem(player_id: string, category: string, item: string) {
+    const heroRef = doc(FIRESTORE_DB, player_id);
+
+    const heroDoc = await getDoc(heroRef);
+    const currentData: any = heroDoc.data() || [];
+    const equipment = currentData.equipment || {};
+    equipment[category] = { [item]: 1 };
+    // equipment[category] = item; dodaj wiele
     await updateDoc(heroRef, {
       equipment,
     });
@@ -90,8 +104,32 @@ export class PlayerRecords implements PlayerEntity {
     return equipment;
   }
 
-  static async getStatistics(player_id: string) {
-    const heroRef = doc(FIRESTORE_DB, `hero/${player_id}`);
+  static async removeItem(player_id: string, category: string, item: string) {
+    const heroRef = doc(FIRESTORE_DB, player_id);
+
+    const heroDoc = await getDoc(heroRef);
+    const currentData: any = heroDoc.data() || {};
+    const equipment = currentData.equipment || {};
+
+    if (equipment[category] && equipment[category][item]) {
+      equipment[category][item] -= 1;
+
+      if (equipment[category][item] <= 0) {
+        delete equipment[category][item];
+      }
+
+      if (Object.keys(equipment[category]).length === 0) {
+        delete equipment[category];
+      }
+
+      await updateDoc(heroRef, { equipment });
+    }
+
+    return equipment;
+  }
+
+  static async getStatistics(creature: string, player_id: string) {
+    const heroRef = doc(FIRESTORE_DB, `${creature}/${player_id}`);
     const heroDoc = await getDoc(heroRef);
     const currentData: any = heroDoc.data() || [];
     return currentData;

@@ -69,7 +69,7 @@ export class WeaponRecords implements WeaponEntity {
 
       await Promise.all(itemPromises);
     }
-    // console.log(items)
+    console.log(items)
     return items;
   }
 }
