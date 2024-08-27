@@ -64,7 +64,9 @@ export class PlayerRecords implements PlayerEntity {
     await setDoc(doc(collection(FIRESTORE_DB, "hero"), "pc_rockefeller"), {
       destination: {},
       missions: {},
-      equipment: {},
+      equipment: {
+        other: {900: 0}
+      },
       parameters: {
         healthPoints: 55,
         manaPoints: 10,
@@ -89,22 +91,32 @@ export class PlayerRecords implements PlayerEntity {
 
     return equipment;
   }
-  static async addItem(player_id: string, category: string, item: string) {
+  static async addItem(player_id: string, category: string, item: string, price: number) {
     const heroRef = doc(FIRESTORE_DB, player_id);
-
+  
     const heroDoc = await getDoc(heroRef);
-    const currentData: any = heroDoc.data() || [];
+    const currentData: any = heroDoc.data() || {};
     const equipment = currentData.equipment || {};
-    equipment[category] = { [item]: 1 };
-    // equipment[category] = item; dodaj wiele
+  
+    if (!equipment[category]) {
+      equipment[category] = {};
+    }
+  
+    if (equipment[category][item]) {
+      equipment[category][item] += 1;
+    } else {
+      equipment[category][item] = 1;
+    }
+     equipment['other'][900] -= price;
+  
     await updateDoc(heroRef, {
       equipment,
     });
-
+  
     return equipment;
   }
 
-  static async removeItem(player_id: string, category: string, item: string) {
+  static async removeItem(player_id: string, category: string, item: string, price: number) {
     const heroRef = doc(FIRESTORE_DB, player_id);
 
     const heroDoc = await getDoc(heroRef);
@@ -121,9 +133,9 @@ export class PlayerRecords implements PlayerEntity {
       if (Object.keys(equipment[category]).length === 0) {
         delete equipment[category];
       }
-
+      equipment['other'][900] += price;
       await updateDoc(heroRef, { equipment });
-    }
+    }//
 
     return equipment;
   }
