@@ -1,5 +1,5 @@
 import { WeaponEntity } from "../types/weapon";
-import { collection, doc, getDoc } from "firebase/firestore";
+import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { FIRESTORE_DB } from "../utils/firebase/firebaseConfig";
 import { getImage } from "../utils/services/getImage";
 
@@ -44,7 +44,7 @@ export class WeaponRecords implements WeaponEntity {
             );
             const docSnapshot = await getDoc(conversationRef);
             const item = docSnapshot.get(itemId);
-
+            console.log(item);
             const selectedData = {
               id: parseInt(itemId, 10),
               image: await getImage(itemId),
@@ -69,7 +69,37 @@ export class WeaponRecords implements WeaponEntity {
 
       await Promise.all(itemPromises);
     }
-    console.log(items)
+    // console.log(items)
     return items;
+  }
+
+  static async equip(creature: string, player_id: string, action: string, itemType: string, itemId: string): Promise<string>{
+    const getType = (itemType: string): string => {
+      const typeMap: { [key: string]: string } = {
+        one_handed: "melee",
+        two_handed: "melee",
+        bow: "distance",
+        crossbow: "distance",
+        ring:"ring1"
+      };
+    
+      return typeMap[itemType] || itemType;
+    };
+    const type = getType(itemType)
+
+    const heroRef = doc(FIRESTORE_DB, `${creature}/${player_id}`);
+    const heroDoc = await getDoc(heroRef);
+    const currentData: any = heroDoc.data() || [];
+
+    
+    const equipped = { 
+      ...currentData.equipped, 
+      [type]: action === 'equip' ? itemId : null 
+    };
+
+    await updateDoc(heroRef, { equipped });
+
+    console.log(currentData.equipped[type]);
+    return currentData;
   }
 }

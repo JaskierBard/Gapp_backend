@@ -12,7 +12,6 @@ playerRouter.post("/add", async (req, res) => {
 });
 
 playerRouter.get("/get", async (req, res) => {
-  // const player_id = "865055da-1b49-11ee-af61-581122ba8110";
   const player_id = "pc_rockefeller";
 
   const statistic = await PlayerRecords.getStatistics("hero", player_id);
@@ -43,6 +42,14 @@ playerRouter.post("/transaction", async (req, res) => {
     await PlayerRecords.addItem(`npc/${req.body.seller}` , req.body.itemType, req.body.itemId,req.body.price);
     await PlayerRecords.removeItem(`hero/${req.body.userId}` , req.body.itemType, req.body.itemId, req.body.price);
   }
+  
+
+});
+
+
+playerRouter.post("/equip", async (req, res) => {
+  // const [...] = req.body
+ await WeaponRecords.equip('hero', req.body.userId, req.body.action, req.body.itemType, req.body.itemId)
   
 
 });

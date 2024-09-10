@@ -146,4 +146,6 @@ export class PlayerRecords implements PlayerEntity {
     const currentData: any = heroDoc.data() || [];
     return currentData;
   }
+
+  
 }
