@@ -7,7 +7,6 @@ import { FIRESTORE_DB } from "../utils/firebase/firebaseConfig";
 export class PlayerRecords implements PlayerEntity {
   player_id: string;
   name: string;
-  color: string;
   position: number;
   level: number;
   magic_circle: number;
@@ -34,7 +33,6 @@ export class PlayerRecords implements PlayerEntity {
   constructor(obj: PlayerEntity) {
     this.player_id = obj.player_id;
     this.name = obj.name;
-    this.color = obj.color;
     this.position = obj.position;
     this.level = obj.level;
     this.magic_circle = obj.magic_circle;
@@ -68,12 +66,18 @@ export class PlayerRecords implements PlayerEntity {
         other: {900: 0}
       },
       parameters: {
-        healthPoints: 55,
-        manaPoints: 10,
-        maxHealthPoints: 122,
-        maxManaPoints: 10,
-        maxStaminaPoints: 10,
-        staminaPoints: 100,
+        hitpoints: 40,
+        mana: 10,
+        maxHitpoints: 40,
+        maxMana: 10,
+        maxStamina: 100,
+        stamina: 100,
+        one_handed: 0,
+        two_handed: 0,
+        bow: 0,
+        crossbow: 0,
+        strength: 0,
+        dexterity: 0,
       },
     });
   }

@@ -146,4 +146,4 @@ dist
 aiConfig.ts
 firebaseConfig.ts
 items_data
-test.ts
+admin.ts

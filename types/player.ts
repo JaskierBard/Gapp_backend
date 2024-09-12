@@ -1,7 +1,6 @@
 export interface PlayerEntity {
     player_id: string;
     name: string;
-    color: string;
     position: number;
     level: number;
     magic_circle : number;
